@@ -1,0 +1,46 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>  
+<script type="text/javascript" src="_layouts/15/clienttemplates.js"></script>  
+<script type="text/javascript" src="_layouts/15/clientforms.js"></script>  
+<script type="text/javascript" src="_layouts/15/clientpeoplepicker.js"></script>  
+<script type="text/javascript" src="_layouts/15/autofill.js"></script>
+<script>
+$(document).ready(function () {
+ initializePeoplePicker("_PartnerName");
+  SP.SOD.executeFunc('sp.js', 'SP.ClientContext', SetUserName);
+});
+
+
+function initializePeoplePicker(peoplePickerElementId) {
+    var schema = {};
+    schema['PrincipalAccountType'] = 'User,DL,SecGroup,SPGroup';
+    schema['SearchPrincipalSource'] = 15;
+    schema['ResolvePrincipalSource'] = 15;
+    schema['AllowMultipleValues'] = true;
+    schema['MaximumEntitySuggestions'] = 50;
+    schema['Width'] = '280px';
+
+    this.SPClientPeoplePicker_InitStandaloneControlWrapper(peoplePickerElementId, null, schema);
+}
+
+function SetUserName() 
+{
+   
+    var contextDR1 = new SP.ClientContext.get_current();
+    /* webDR = contextDR.get_web();
+     usr = webDR.get_currentUser();*/
+   //  contextDR1.load(PID);
+     contextDR1.executeQueryAsync(Function.createDelegate(this, function () { usersuccess(); }), Function.createDelegate(this, function () { userfail(); }));
+}
+function usersuccess(sender, args) 
+{
+    
+     var PID = PartnerIds;
+     var a = PID + ";";
+     var PartnerName = this.SPClientPeoplePicker.SPClientPeoplePickerDict._PartnerName_TopSpan;
+     PartnerName.AddUserKeys(a);
+}
+function userfail(sender, args) 
+{
+}
+</script>
+<div id="_PartnerName"></div>
